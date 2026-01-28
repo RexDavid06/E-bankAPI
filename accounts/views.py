@@ -8,6 +8,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import AllowAny
 from django.contrib.auth import authenticate
 from google.oauth2 import id_token
+from rest_framework.permissions import IsAuthenticated
 
 from django.conf import settings
 from .utils import get_jwt_tokens_for_user
@@ -49,8 +50,21 @@ class LoginView(APIView):
         }, status=status.HTTP_401_UNAUTHORIZED) 
     
 
-class GoogleAuthView(APIView):
-    permission_classes = [AllowAny]
-    authentication_classes = []
+class ProfileView(APIView):
+    permission_classes = [IsAuthenticated]
 
-    pass
+    def get(self, request):
+        user = request.user
+        return Response({
+            "id": user.id,
+            "username": user.username,
+            "email": user.email,
+            "first_name": user.first_name,
+            "last_name": user.last_name,
+            "phone_number": user.phone_number,
+            "date_of_birth": user.date_of_birth,
+            "phone_number": user.phone_number,
+            "id_number_type": user.id_number_type,
+            "id_number": user.id_number,
+        })
+    
