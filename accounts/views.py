@@ -7,6 +7,10 @@ from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import AllowAny
 from django.contrib.auth import authenticate
+from google.oauth2 import id_token
+
+from django.conf import settings
+from .utils import get_jwt_tokens_for_user
 
 User=get_user_model()
 
@@ -42,9 +46,11 @@ class LoginView(APIView):
             }, status=status.HTTP_200_OK)
         return Response({
             "error": "incorrect credentials",
-        }, status=status.HTTP_401_UNAUTHORIZED)
+        }, status=status.HTTP_401_UNAUTHORIZED) 
     
 
+class GoogleAuthView(APIView):
+    permission_classes = [AllowAny]
+    authentication_classes = []
 
-
-
+    pass
