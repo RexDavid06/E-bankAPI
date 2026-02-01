@@ -2,6 +2,7 @@ from django.db import transaction
 from .models import Transaction
 from wallets.models import Wallet
 from decimal import Decimal
+from .models import LedgerEntry
 
 
 class InsufficientFund(Exception):
@@ -31,4 +32,19 @@ def transfer_funds(*, sender, receiver, amount, idempotency_key):
         idempotency_key=idempotency_key,
         status = "SUCCESS"
     )
+    LedgerEntry.objects.bulk_create([
+        LedgerEntry(
+            transaction=tx,
+            wallet=sender_wallet,
+            amount=amount,
+            entry_type="DEBIT",
+        ),
+        LedgerEntry(
+            transaction=tx,
+            wallet=receiver_wallet,
+            amount=amount,
+            entry_type="CREDIT",
+        )
+    ])
+    
     return tx
