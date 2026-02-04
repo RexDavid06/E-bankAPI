@@ -38,7 +38,11 @@ class LedgerEntry(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return self.transaction
+        return str(self.transaction)
+    
+    class Meta:
+        verbose_name = 'Ledger Entry'
+        verbose_name_plural = 'Ledger Entries'
     
 
 
