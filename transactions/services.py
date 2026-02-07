@@ -9,7 +9,7 @@ class InsufficientFund(Exception):
     pass
 
 @transaction.atomic
-def transfer_funds(*, sender, receiver, amount, idempotency_key):
+def transfer_funds(*, sender, receiver, amount, narration=None, idempotency_key):
     if Transaction.objects.filter(idempotency_key=idempotency_key).exists():
         return Transaction.objects.get(idempotency_key=idempotency_key)
     
@@ -29,6 +29,7 @@ def transfer_funds(*, sender, receiver, amount, idempotency_key):
         sender=sender,
         receiver=receiver,
         amount=amount,
+        narration=narration,
         idempotency_key=idempotency_key,
         status = "SUCCESS"
     )

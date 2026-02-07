@@ -25,6 +25,7 @@ class TransferView(APIView):
             sender=request.user,
             receiver=receiver,
             amount=serializer.validated_data['amount'],
+            narration = serializer.validated_data['narration'],
             idempotency_key=serializer.validated_data['idempotency_key'],
         )
         return Response({
